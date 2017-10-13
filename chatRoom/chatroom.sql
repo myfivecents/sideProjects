@@ -24,7 +24,15 @@ CREATE TABLE accounts(
     username varchar NOT NULL,
     first_name varchar NOT NULL,
     last_name varchar NOT NULL,
-    CONSTRAINT pk_accounts_id PRIMARY KEY (id)
+    password varchar NOT NULL,
+    CONSTRAINT pk_accounts_id PRIMARY KEY (id),
+    CONSTRAINT password_length CHECK (char_length(password) >= 8)
+);
+
+CREATE TABLE account_chat(
+    account_id integer,
+    chat_id integer,
+    CONSTRAINT pk_account_chat_account_id_chat_id PRIMARY KEY (account_id, chat_id)
 );
 
 
@@ -47,11 +55,11 @@ INSERT INTO chat_room (id, chat_name) VALUES (4, 'chat4');
 SELECT setval(pg_get_serial_sequence('chat_room', 'id'), 4);
 
 
-INSERT INTO accounts (id, username, first_name, last_name) VALUES (1, 'user1', 'John', 'Doe');
-INSERT INTO accounts (id, username, first_name, last_name) VALUES (2, 'user2', 'Jacob', 'Nickell');
-INSERT INTO accounts (id, username, first_name, last_name) VALUES (3, 'user3', 'Sallie', 'Mae');
-INSERT INTO accounts (id, username, first_name, last_name) VALUES (4, 'user4', 'Abraham', 'Lincoln');
-INSERT INTO accounts (id, username, first_name, last_name) VALUES (5, 'user5', 'Elvis', 'Presley');
+INSERT INTO accounts (id, username, first_name, last_name, password) VALUES (1, 'user1', 'John', 'Doe', 'password123');
+INSERT INTO accounts (id, username, first_name, last_name, password) VALUES (2, 'user2', 'Jacob', 'Nickell', 'password123');
+INSERT INTO accounts (id, username, first_name, last_name, password) VALUES (3, 'user3', 'Sallie', 'Mae', 'password123');
+INSERT INTO accounts (id, username, first_name, last_name, password) VALUES (4, 'user4', 'Abraham', 'Lincoln', 'password123');
+INSERT INTO accounts (id, username, first_name, last_name, password) VALUES (5, 'user5', 'Elvis', 'Presley', 'password123');
 
 SELECT setval(pg_get_serial_sequence('accounts', 'id'), 5);
 
@@ -77,6 +85,17 @@ INSERT INTO blog_post (id, account_id, title, body, date_time) VALUES (5, 5, 'bl
 
 SELECT setval(pg_get_serial_sequence('blog_post', 'id'), 9);
 
+INSERT INTO account_chat (account_id, chat_id) VALUES (1, 1);
+INSERT INTO account_chat (account_id, chat_id) VALUES (1, 2);
+INSERT INTO account_chat (account_id, chat_id) VALUES (1, 3);
+INSERT INTO account_chat (account_id, chat_id) VALUES (1, 4);
+INSERT INTO account_chat (account_id, chat_id) VALUES (2, 1);
+INSERT INTO account_chat (account_id, chat_id) VALUES (3, 1);
+INSERT INTO account_chat (account_id, chat_id) VALUES (2, 2);
+
+
+
+
 ALTER TABLE messages
 ADD FOREIGN KEY (chat_id)
 REFERENCES chat_room(id);
@@ -89,3 +108,10 @@ ALTER TABLE blog_post
 ADD FOREIGN KEY (account_id)
 REFERENCES accounts(id);
 
+ALTER TABLE account_chat
+ADD FOREIGN KEY (account_id)
+REFERENCES accounts(id);
+
+ALTER TABLE account_chat
+ADD FOREIGN KEY (chat_id)
+REFERENCES chat_room(id);
