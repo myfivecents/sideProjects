@@ -30,13 +30,25 @@ public class JDBCChatViewDAO implements ChatViewDAO {
 	}
 
 	public ChatView addAccountToChat(int accountId, int chatId) {
-		// TODO Auto-generated method stub
-		return null;
+		String sqlInsertChatRoom = "INSERT INTO account_chat (accout_id, chat_id) VALUES (?, ?)";
+		
+		jdbcTemplate.update(sqlInsertChatRoom, accountId, chatId);
+		ChatView chatView = new ChatView();
+		chatView.setAccountId(accountId);
+		chatView.setChat_id(chatId);
+		return chatView;
+
 	}
 
-	public void removeAccountFromChat(int accountId) {
-		// TODO Auto-generated method stub
+	public boolean removeAccountFromChat(int accountId) {
+		String sqlDeleteChatRoom = "DELETE FROM account_chat WHERE account_id = ?";
+		int rowsImpacted = jdbcTemplate.update(sqlDeleteChatRoom, accountId);
 		
+		if (rowsImpacted > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

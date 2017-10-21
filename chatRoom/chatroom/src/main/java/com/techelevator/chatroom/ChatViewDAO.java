@@ -5,6 +5,6 @@ import java.util.List;
 public interface ChatViewDAO {
 	public List<ChatView> getAllChats();
 	public ChatView addAccountToChat(int accountId, int chatId);
-	public void removeAccountFromChat(int Accountid);
+	public boolean removeAccountFromChat(int Accountid);
 	
 }
