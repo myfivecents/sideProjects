@@ -16,9 +16,25 @@ public class JDBCBlogPostDAO implements BlogPostDAO {
 		jdbcTemplate = new  JdbcTemplate(dataSource);
 	}
 
-	public BlogPost createNewBlogPost() {
-		// TODO Auto-generated method stub
-		return null;
+	public BlogPost createNewBlogPost(int accountId, String title, String body, LocalDate date, String notes) {
+		String sqlBlogId = "SELECT nextval(pg_get_serial_sequence('blog_post', 'id'))";
+		
+		SqlRowSet nextBlogId = jdbcTemplate.queryForRowSet(sqlBlogId);
+		nextBlogId.next();
+		int blogId = nextBlogId.getInt(1);
+		
+		String sqlUpdate = "INSERT INTO blog_post (id, account_id, title, body, date_time, notes) VALUES (?, ?, ?, ?, ?, ?)";
+		
+		jdbcTemplate.update(sqlUpdate, blogId, accountId, title, body, date, notes);
+		
+		BlogPost post = new BlogPost();
+		post.setPostId(blogId);
+		post.setAccountId(accountId);
+		post.setPostTitle(title);
+		post.setPostBody(body);
+		post.setDateTime(date);
+		post.setNotes(notes);
+		return post;
 	}
 
 	public List<BlogPost> allBlogPosts() {
@@ -34,18 +50,40 @@ public class JDBCBlogPostDAO implements BlogPostDAO {
 	}
 
 	public List<BlogPost> blogPostsBetweenDates(LocalDate fromDate, LocalDate toDate) {
-		// TODO Auto-generated method stub
-		return null;
+		List<BlogPost> blogList = new ArrayList<BlogPost>();
+		String sqlSites = "SELECT * " +
+						  "FROM blog_post " +
+						  "WHERE date_time >= ? AND date_time <= ?";
+		SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlSites, fromDate, toDate);
+		while(rowSet.next()) {
+			BlogPost post = makeBlogPostFromRowSet(rowSet);
+			blogList.add(post);
+		}
+		return blogList;
 	}
 
-	public List<BlogPost> blogPostSinceDAte(LocalDate sinceDate) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<BlogPost> blogPostSinceDate(LocalDate sinceDate) {
+		List<BlogPost> blogList = new ArrayList<BlogPost>();
+		String sqlSites = "SELECT * " +
+						  "FROM blog_post " +
+						  "WHERE date_time >= ?";
+		SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlSites, sinceDate);
+		while(rowSet.next()) {
+			BlogPost post = makeBlogPostFromRowSet(rowSet);
+			blogList.add(post);
+		}
+		return blogList;
 	}
 
-	public boolean deleteBlogPost() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deleteBlogPostById(int id) {
+		String sqlRemovePost = "REMOVE FROM blog_post " +
+							   "WHERE id = ?";
+		int updatedRows = jdbcTemplate.update(sqlRemovePost, id);
+		if (updatedRows > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private BlogPost makeBlogPostFromRowSet(SqlRowSet results) {
@@ -58,6 +96,5 @@ public class JDBCBlogPostDAO implements BlogPostDAO {
 		post.setNotes(results.getString("notes"));
 		return post;
 	}
-	
 
 }

@@ -1,6 +1,6 @@
 package com.techelevator.chatroom;
 
-public class Chat {
+public class ChatRoom {
 	private int chat_id;
 	private String chatName;
 	
