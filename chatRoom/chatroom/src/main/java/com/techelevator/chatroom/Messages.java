@@ -3,17 +3,17 @@ package com.techelevator.chatroom;
 import java.time.LocalDate;
 
 public class Messages {
-	private int message_id;
+	private int messageId;
 	private LocalDate dateTime;
-	private int chat_id;
-	private int account_id;
+	private int chatId;
+	private int accountId;
 	private String messageBody;
 	
-	public int getMessage_id() {
-		return message_id;
+	public int getMessageId() {
+		return messageId;
 	}
-	public void setMessage_id(int message_id) {
-		this.message_id = message_id;
+	public void setMessageId(int messageId) {
+		this.messageId = messageId;
 	}
 	public LocalDate getDateTime() {
 		return dateTime;
@@ -21,17 +21,17 @@ public class Messages {
 	public void setDateTime(LocalDate dateTime) {
 		this.dateTime = dateTime;
 	}
-	public int getChat_id() {
-		return chat_id;
+	public int getChatId() {
+		return chatId;
 	}
-	public void setChat_id(int chat_id) {
-		this.chat_id = chat_id;
+	public void setChatId(int chat_id) {
+		this.chatId = chat_id;
 	}
-	public int getAccount_id() {
-		return account_id;
+	public int getAccountId() {
+		return accountId;
 	}
-	public void setAccount_id(int account_id) {
-		this.account_id = account_id;
+	public void setAccountId(int account_id) {
+		this.accountId = account_id;
 	}
 	public String getMessageBody() {
 		return messageBody;
